@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  dev:
+    build:
+      target: dev
+      context: .
+    volumes:
+      - .:/work
+    tty: true
+  grpc-server:
+    build:
+      target: server-runner
+      context: .
+    ports:
+      - 50051:50051
+  gateway-server:
+    build:
+      target: gateway-runner
+      context: .
+    ports:
+      - 8080:8080
+  docs-server:
+    # swagger-ui's document url:
+    #   https://swagger.io/docs/open-source-tools/swagger-ui/usage/installation/
+    #   https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/
+    image: swaggerapi/swagger-ui
+    environment:
+      SWAGGER_JSON: /gen/openapiv2/apidocs.swagger.json
+      BASE_URL: /docs
+    volumes:
+      - ./gen/openapiv2/apidocs.swagger.json:/gen/openapiv2/apidocs.swagger.json

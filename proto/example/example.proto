@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package example;
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/sayshu-7s/grpc-gateway-example/gen/go/example";
+
+// API for grpc-gateway trial.
+service ExampleApi {
+  // Gets a single message.
+  rpc GetMessage(GetMessageRequest) returns (ExampleMessage) {
+    option (google.api.http) = {
+      get: "/example-messages/{id}"
+    };
+  }
+
+  // Gets multiple Messages.
+  rpc BatchGetMessages(BatchGetMessagesRequest)
+      returns (stream BatchGetMessagesResponse) {
+    option (google.api.http) = {
+      post: "/example-messages:batchGet"
+      body: "*"
+    };
+  }
+
+  // Creates a new message.
+  rpc CreateMessage(CreateMessageRequest) returns (ExampleMessage) {
+    option (google.api.http) = {
+      post: "/example-messages"
+      body: "*"
+    };
+  }
+
+  // Deletes a message.
+  rpc DeleteMessage(DeleteMessageRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/example-message/{id}"
+    };
+  }
+}
+
+// The request for ExampleApi.GetMessage.
+message GetMessageRequest {
+  // The id of the message.
+  int64 id = 1;
+}
+
+// The request for ExampleApi.CreateMessage.
+//
+// message.id is asigned by either the client or the server.
+// if the client does not specify, the server will generate one and asign it
+// to this message.
+message CreateMessageRequest {
+  // The message to create.
+  // message.id is asigned by either the client or the server.
+  // if the client does not specify, the server will generate one and asign it
+  // to this message.
+  ExampleMessage message = 1;
+}
+
+// The request for ExampleApi.DeleteMessage.
+message DeleteMessageRequest {
+  // The id of the message.
+  int64 id = 1;
+}
+
+// The request for ExampleApi.BatchGetMessage.
+message BatchGetMessagesRequest {
+  repeated int64 ids = 1;
+}
+
+// The response for ExampleApi.BatchGetMessage.
+message BatchGetMessagesResponse {
+  oneof result {
+    ExampleMessage found = 1;
+    int64 missing = 2;
+  }
+}
+
+// An ExampleMessage for ExampleApi.
+message ExampleMessage {
+  // The id of the message.
+  int64 id = 1;
+
+  // The string type example field of the message.
+  string example_field = 2;
+}

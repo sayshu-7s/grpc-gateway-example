@@ -1,0 +1,242 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "example/example.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ExampleApi"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/example-message/{id}": {
+      "delete": {
+        "summary": "Deletes a message.",
+        "operationId": "ExampleApi_DeleteMessage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The id of the message.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ExampleApi"
+        ]
+      }
+    },
+    "/example-messages": {
+      "post": {
+        "summary": "Creates a new message.",
+        "operationId": "ExampleApi_CreateMessage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/exampleExampleMessage"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/exampleCreateMessageRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ExampleApi"
+        ]
+      }
+    },
+    "/example-messages/{id}": {
+      "get": {
+        "summary": "Gets a single message.",
+        "operationId": "ExampleApi_GetMessage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/exampleExampleMessage"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The id of the message.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ExampleApi"
+        ]
+      }
+    },
+    "/example-messages:batchGet": {
+      "post": {
+        "summary": "Gets multiple Messages.",
+        "operationId": "ExampleApi_BatchGetMessages",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/exampleBatchGetMessagesResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/rpcStatus"
+                }
+              },
+              "title": "Stream result of exampleBatchGetMessagesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/exampleBatchGetMessagesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ExampleApi"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "exampleBatchGetMessagesRequest": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          }
+        }
+      },
+      "description": "The request for ExampleApi.BatchGetMessage."
+    },
+    "exampleBatchGetMessagesResponse": {
+      "type": "object",
+      "properties": {
+        "found": {
+          "$ref": "#/definitions/exampleExampleMessage"
+        },
+        "missing": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "description": "The response for ExampleApi.BatchGetMessage."
+    },
+    "exampleCreateMessageRequest": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "$ref": "#/definitions/exampleExampleMessage",
+          "description": "The message to create.\nmessage.id is asigned by either the client or the server.\nif the client does not specify, the server will generate one and asign it\nto this message."
+        }
+      },
+      "description": "The request for ExampleApi.CreateMessage.\n\nmessage.id is asigned by either the client or the server.\nif the client does not specify, the server will generate one and asign it\nto this message."
+    },
+    "exampleExampleMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "The id of the message."
+        },
+        "exampleField": {
+          "type": "string",
+          "description": "The string type example field of the message."
+        }
+      },
+      "description": "An ExampleMessage for ExampleApi."
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
